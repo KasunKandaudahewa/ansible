@@ -1,0 +1,30 @@
+
+- name: Example Playbook
+  hosts: localhost
+  gather_facts: False
+  become: yes
+
+  tasks:
+
+  - name: Debug SSH User
+    debug:
+      var: ansible_user
+
+  - name: Set permissions on script
+    file:
+      path: /snap/semaphore/runlocation.sh
+      mode: '0755'
+      owner: root
+      group: root
+
+  - name: Run location script as root
+    command: /snap/semaphore/runlocation.sh
+    become: yes
+    become_user: root
+
+  - name: Debug remote user
+    command: whoami
+    register: whoami_output
+
+  - debug:
+      var: whoami_output.stdout
